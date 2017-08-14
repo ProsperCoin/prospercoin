@@ -1,10 +1,13 @@
 TEMPLATE = app
 TARGET = prospercoin-qt
 macx:TARGET = "Prospercoin-Qt"
-VERSION = 1.0.0.0
+VERSION = 1.1.0.0
 INCLUDEPATH += src src/json src/qt
 QT += core gui network
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4) {
+	QT += widgets
+	DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
+}
 DEFINES += QT_GUI BOOST_THREAD_USE_LIB BOOST_SPIRIT_THREADSAFE
 CONFIG += no_include_pwd
 CONFIG += thread
@@ -20,29 +23,29 @@ CONFIG += static
 #    BOOST_INCLUDE_PATH, BOOST_LIB_PATH, BDB_INCLUDE_PATH,
 #    BDB_LIB_PATH, OPENSSL_INCLUDE_PATH and OPENSSL_LIB_PATH respectively
 
-win32 {
+
 BOOST_LIB_SUFFIX=-mgw48-mt-s-1_55
 BOOST_INCLUDE_PATH=C:/coin/dept/boost_1_55_0
 BOOST_LIB_PATH=C:/coin/dept/boost_1_55_0/stage/lib
 BDB_INCLUDE_PATH=C:/coin/dept/db-4.8.30.NC-mgw/build_unix
 BDB_LIB_PATH=C:/coin/dept/db-4.8.30.NC-mgw/build_unix
-OPENSSL_INCLUDE_PATH=C:/coin/dept/openssl-1.0.1e/include
-OPENSSL_LIB_PATH=C:/coin/dept/openssl-1.0.1e
-MINIUPNPC_INCLUDE_PATH=C:/coin/dept/
+OPENSSL_INCLUDE_PATH=C:/coin/dept/openssl-1.0.2l/include
+OPENSSL_LIB_PATH=C:/coin/dept/openssl-1.0.2l
+MINIUPNPC_INCLUDE_PATH=C:/coin/dept/miniupnpc
 MINIUPNPC_LIB_PATH=C:/coin/dept/miniupnpc
-LIBPNG_INCLUDE_PATH=C:/coin/dept/libpng-1.6.8
 LIBPROTOBUF_INCLUDE_PATH=C:/coin/dept/protobuf-2.5.0/src
+LIBPROTOBUF_LIB_PATH=C:/coin/dept/protobuf-2.5.0/src/.libs
 QRENCODE_INCLUDE_PATH=C:/coin/dept/qrencode-3.4.3
 QRENCODE_LIB_PATH=C:/coin/dept/qrencode-3.4.3/.libs
+LIBPNG_INCLUDE_PATH=C:/coin/dept/libpng-1.6.8
 LIBPNG_LIB_PATH=C:/coin/dept/libpng-1.6.8/.libs
-LIBPROTOBUF_LIB_PATH=C:/coin/dept/protobuf-2.5.0/src/.libs
-}
 
 OBJECTS_DIR = build
 MOC_DIR = build
 UI_DIR = build
 
 # use: qmake "RELEASE=1"
+RELEASE = 1
 contains(RELEASE, 1) {
     # Mac: compile for maximum compatibility (10.5, 32-bit)
     macx:QMAKE_CXXFLAGS += -mmacosx-version-min=10.5 -arch i386 -isysroot /Developer/SDKs/MacOSX10.5.sdk
@@ -73,6 +76,7 @@ win32:QMAKE_LFLAGS *= -static-libgcc -static-libstdc++
 
 # use: qmake "USE_QRCODE=1"
 # libqrencode (http://fukuchi.org/works/qrencode/index.en.html) must be installed for support
+USE_QRCODE = 1
 contains(USE_QRCODE, 1) {
     message(Building with QRCode support)
     DEFINES += USE_QRCODE
@@ -87,6 +91,7 @@ contains(USE_QRCODE, 1) {
 #  or: qmake "USE_UPNP=0" (disabled by default)
 #  or: qmake "USE_UPNP=-" (not supported)
 # miniupnpc (http://miniupnp.free.fr/files/) must be installed for support
+USE_UPNP=-
 contains(USE_UPNP, -) {
     message(Building without UPNP support)
 } else {
@@ -131,11 +136,11 @@ LIBS += $$PWD/src/leveldb/libleveldb.a $$PWD/src/leveldb/libmemenv.a
     genleveldb.commands = cd $$PWD/src/leveldb && CC=$$QMAKE_CC CXX=$$QMAKE_CXX $(MAKE) OPT=\"$$QMAKE_CXXFLAGS $$QMAKE_CXXFLAGS_RELEASE\" libleveldb.a libmemenv.a
 } else {
     # make an educated guess about what the ranlib command is called
-    isEmpty(QMAKE_RANLIB) {
-        QMAKE_RANLIB = $$replace(QMAKE_STRIP, strip, ranlib)
-    }
+    #isEmpty(QMAKE_RANLIB) {
+    #   QMAKE_RANLIB = $$replace(QMAKE_STRIP, strip, ranlib)
+    #}
     LIBS += -lshlwapi
-    #genleveldb.commands = cd $$PWD/src/leveldb && CC=$$QMAKE_CC CXX=$$QMAKE_CXX TARGET_OS=OS_WINDOWS_CROSSCOMPILE $(MAKE) OPT=\"$$QMAKE_CXXFLAGS $$QMAKE_CXXFLAGS_RELEASE\" libleveldb.a libmemenv.a && $$QMAKE_RANLIB $$PWD/src/leveldb/libleveldb.a && $$QMAKE_RANLIB $$PWD/src/leveldb/libmemenv.a
+    # genleveldb.commands = cd $$PWD/src/leveldb && CC=$$QMAKE_CC CXX=$$QMAKE_CXX TARGET_OS=OS_WINDOWS_CROSSCOMPILE $(MAKE) OPT=\"$$QMAKE_CXXFLAGS $$QMAKE_CXXFLAGS_RELEASE\" libleveldb.a libmemenv.a && $$QMAKE_RANLIB $$PWD/src/leveldb/libleveldb.a && $$QMAKE_RANLIB $$PWD/src/leveldb/libmemenv.a
 }
 genleveldb.target = $$PWD/src/leveldb/libleveldb.a
 genleveldb.depends = FORCE
@@ -143,19 +148,24 @@ PRE_TARGETDEPS += $$PWD/src/leveldb/libleveldb.a
 QMAKE_EXTRA_TARGETS += genleveldb
 # Gross ugly hack that depends on qmake internals, unfortunately there is no other way to do it.
 QMAKE_CLEAN += $$PWD/src/leveldb/libleveldb.a; cd $$PWD/src/leveldb ; $(MAKE) clean
-
 # regenerate src/build.h
+USE_BUILD_INFO=1
 !win32|contains(USE_BUILD_INFO, 1) {
-    genbuild.depends = FORCE
-    genbuild.commands = cd $$PWD; /bin/sh share/genbuild.sh $$OUT_PWD/build/build.h
-    genbuild.target = $$OUT_PWD/build/build.h
+	!win32 {
+		genbuild.depends = FORCE
+		genbuild.commands = cd $$PWD; /bin/sh share/genbuild.sh $$OUT_PWD/build/build.h
+		genbuild.target = $$OUT_PWD/build/build.h
+	} else {
+		# genbuild.depends = FORCE
+		# genbuild.commands = cd $$PWD; /bin/sh share/genbuildwin32.sh $$OUT_PWD/build/build.h
+		# genbuild.target = $$OUT_PWD/build/build.h
+	}
     PRE_TARGETDEPS += $$OUT_PWD/build/build.h
     QMAKE_EXTRA_TARGETS += genbuild
     DEFINES += HAVE_BUILD_INFO
 }
 
-QMAKE_CXXFLAGS_WARN_ON = -fdiagnostics-show-option -Wall -Wextra -Wformat -Wformat-security -Wno-unused-parameter -Wstack-protector
-
+QMAKE_CXXFLAGS_WARN_ON = -fdiagnostics-show-option -Wall -Wextra -Wformat -Wformat-security -Wno-unused-parameter -Wstack-protector -Wno-deprecated
 # Input
 DEPENDPATH += src src/json src/qt
 HEADERS += src/qt/bitcoingui.h \
@@ -243,7 +253,6 @@ HEADERS += src/qt/bitcoingui.h \
     src/limitedmap.h \
     src/qt/macnotificationhandler.h \
     src/qt/splashscreen.h
-
 SOURCES += src/qt/bitcoin.cpp \
     src/qt/bitcoingui.cpp \
     src/qt/transactiontablemodel.cpp \
@@ -331,29 +340,29 @@ FORMS += src/qt/forms/sendcoinsdialog.ui \
     src/qt/forms/optionsdialog.ui
 
 contains(USE_QRCODE, 1) {
-HEADERS += src/qt/qrcodedialog.h
-SOURCES += src/qt/qrcodedialog.cpp
-FORMS += src/qt/forms/qrcodedialog.ui
+	HEADERS += src/qt/qrcodedialog.h
+	SOURCES += src/qt/qrcodedialog.cpp
+	FORMS += src/qt/forms/qrcodedialog.ui
 }
 
 contains(BITCOIN_QT_TEST, 1) {
-SOURCES += src/qt/test/test_main.cpp \
-    src/qt/test/uritests.cpp
-HEADERS += src/qt/test/uritests.h
-DEPENDPATH += src/qt/test
-QT += testlib
-TARGET = prospercoin-qt_test
-DEFINES += BITCOIN_QT_TEST
-  macx: CONFIG -= app_bundle
+	SOURCES += src/qt/test/test_main.cpp \
+		src/qt/test/uritests.cpp
+	HEADERS += src/qt/test/uritests.h
+	DEPENDPATH += src/qt/test
+	QT += testlib
+	TARGET = prospercoin-qt_test
+	DEFINES += BITCOIN_QT_TEST
+	  macx: CONFIG -= app_bundle
 }
 
 contains(USE_SSE2, 1) {
-DEFINES += USE_SSE2
-gccsse2.input  = SOURCES_SSE2
-gccsse2.output = $$PWD/build/${QMAKE_FILE_BASE}.o
-gccsse2.commands = $(CXX) -c $(CXXFLAGS) $(INCPATH) -o ${QMAKE_FILE_OUT} ${QMAKE_FILE_NAME} -msse2 -mstackrealign
-QMAKE_EXTRA_COMPILERS += gccsse2
-SOURCES_SSE2 += src/scrypt-sse2.cpp
+	DEFINES += USE_SSE2
+	gccsse2.input  = SOURCES_SSE2
+	gccsse2.output = $$PWD/build/${QMAKE_FILE_BASE}.o
+	gccsse2.commands = $(CXX) -c $(CXXFLAGS) $(INCPATH) -o ${QMAKE_FILE_OUT} ${QMAKE_FILE_NAME} -msse2 -mstackrealign
+	QMAKE_EXTRA_COMPILERS += gccsse2
+	SOURCES_SSE2 += src/scrypt-sse2.cpp
 }
 
 # Todo: Remove this line when switching to Qt5, as that option was removed
@@ -386,7 +395,6 @@ OTHER_FILES += README.md \
     src/test/*.h \
     src/qt/test/*.cpp \
     src/qt/test/*.h
-
 # platform specific defaults, if not overridden on command line
 isEmpty(BOOST_LIB_SUFFIX) {
     macx:BOOST_LIB_SUFFIX = -mt

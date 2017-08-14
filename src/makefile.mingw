@@ -15,7 +15,7 @@
 # 'make clean' assumes it is running inside a MSYS shell, and uses 'rm'
 # to remove files.
 
-CXX ?= g++
+CXX ?= gcc
 
 USE_UPNP:=-
 USE_IPV6:=1
@@ -31,7 +31,7 @@ INCLUDEPATHS= \
  -I"c:/coin/dept/boost_1_55_0/boost/algorithm" \
  -I"c:/coin/dept/boost_1_55_0/boost/algorithm/string" \
  -I"c:/coin/dept/db-4.8.30.NC-mgw/build_unix" \
- -I"c:/coin/dept/openssl-1.0.1e/include" \
+ -I"c:/coin/dept/openssl-1.0.2l/include" \
  -I"c:/coin/dept/miniupnpc" \
  -I"$(DEPSDIR)/include"
 
@@ -39,7 +39,7 @@ LIBPATHS= \
  -L"$(CURDIR)/leveldb" \
   -L"c:/coin/dept/boost_1_55_0/stage/lib" \
  -L"c:/coin/dept/db-4.8.30.NC-mgw/build_unix" \
- -L"c:/coin/dept/openssl-1.0.1e" \
+ -L"c:/coin/dept/openssl-1.0.2l" \
  -L"$(DEPSDIR)/lib"
 LIBS= \
  -l leveldb \
@@ -57,7 +57,7 @@ DEFS=-D_MT -DWIN32 -D_WINDOWS -DBOOST_THREAD_USE_LIB -DBOOST_SPIRIT_THREADSAFE
 DEBUGFLAGS=-g
 CFLAGS=-mthreads -O2 -w -Wall -Wextra -Wformat -Wformat-security -Wno-unused-parameter $(DEBUGFLAGS) $(DEFS) $(INCLUDEPATHS)
 # enable: ASLR, DEP and large address aware
-LDFLAGS=-Wl,--dynamicbase -Wl,--nxcompat -Wl,--large-address-aware
+LDFLAGS=-Wl,--dynamicbase -Wl,--nxcompat -Wl,--large-address-aware -static
 
 TESTDEFS = -DTEST_DATA_DIR=$(abspath test/data)
 

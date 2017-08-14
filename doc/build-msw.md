@@ -80,10 +80,18 @@ MSYS shell:
 	mkdir miniupnpc
 	cp *.h miniupnpc/
 
-Litecoin
+Build.h
 -------
+
+MSYS Shell:
+
+	./share/genbuildwin32.sh buid/build.sh
+	
+	
+ProsperCoin
+------------
 DOS prompt:
 
-	cd \litecoin\src
+	cd \prospercoin\src
 	mingw32-make -f makefile.mingw
-	strip litecoind.exe
+	strip prospercoind.exe

@@ -1128,6 +1128,10 @@ unsigned int static GetNextWorkRequired_V1(const CBlockIndex* pindexLast, const 
     // Genesis block
     if (pindexLast == NULL)
         return nProofOfWorkLimit;
+	
+	// Based line from switching back from kimodo
+	if ((pindexLast->nHeight >= 243758) && (pindexLast->nHeight <= 250000))
+		return nProofOfWorkLimit;
 
     // Only change once per interval
     if ((pindexLast->nHeight+1) % nInterval != 0)
@@ -1270,11 +1274,20 @@ unsigned int static GetNextWorkRequired(const CBlockIndex* pindexLast, const CBl
         }
         else {
                 if (pindexLast->nHeight+1 >= 15000) { DiffMode = 2; }
+				if (pindexLast->nHeight+1 >= 243759) { DiffMode = 3; }
         }
+		
+		// 243758
         
-        if                (DiffMode == 1) { return GetNextWorkRequired_V1(pindexLast, pblock); }
-        else if        (DiffMode == 2) { return GetNextWorkRequired_V2(pindexLast, pblock); }
-        return GetNextWorkRequired_V2(pindexLast, pblock);
+        if (DiffMode == 1) 
+		{ 
+			return GetNextWorkRequired_V1(pindexLast, pblock); 
+		}
+        else if (DiffMode == 2) 
+		{ 
+			return GetNextWorkRequired_V2(pindexLast, pblock); 
+		} 
+        return GetNextWorkRequired_V1(pindexLast, pblock);
 }
 bool CheckProofOfWork(uint256 hash, unsigned int nBits)
 {
@@ -1693,7 +1706,10 @@ bool CBlock::ConnectBlock(CValidationState &state, CBlockIndex* pindex, CCoinsVi
 {
     // Check it again in case a previous version let a bad block in
     if (!CheckBlock(state, !fJustCheck, !fJustCheck))
+	{
+		printf("Bad block detected");
         return false;
+	}
 
     // verify that the view's current state corresponds to the previous block
     assert(pindex->pprev == view.GetBestBlock());

@@ -1,7 +1,8 @@
+.hg/*
 src/*.exe
-src/litecoin
-src/litecoind
-src/test_litecoin
+src/prospercoin
+src/prospercoind
+src/test_prospercoin
 .*.swp
 *.*~*
 *.bak
@@ -9,17 +10,17 @@ src/test_litecoin
 *.orig
 *.o
 *.patch
-.litecoin
+.prospercoin
 
 # Compilation and Qt preprocessor part
 *.qm
 Makefile
-litecoin-qt
-Litecoin-Qt.app
+prospercoin-qt
+Prospercoin-Qt.app
 
 # Unit-tests
 Makefile.test
-litecoin-qt_test
+prospercoin-qt_test
 
 # Resources cpp
 qrc_*.cpp
