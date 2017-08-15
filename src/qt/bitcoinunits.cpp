@@ -34,9 +34,9 @@ QString BitcoinUnits::name(int unit)
 {
     switch(unit)
     {
-    case BTC: return QString("PRXC");
-    case mBTC: return QString("mPRXC");
-    case uBTC: return QString::fromUtf8("μPRXC");
+    case BTC: return QString("PRC");
+    case mBTC: return QString("mPRC");
+    case uBTC: return QString::fromUtf8("μPRC");
     default: return QString("???");
     }
 }
@@ -45,9 +45,9 @@ QString BitcoinUnits::description(int unit)
 {
     switch(unit)
     {
-    case BTC: return QString("ProsperV1");
-    case mBTC: return QString("Milli-ProsperV1 (1 / 1,000)");
-    case uBTC: return QString("Micro-ProsperV1 (1 / 1,000,000)");
+    case BTC: return QString("ProsperCoinClassic");
+    case mBTC: return QString("Milli-ProsperCoinClassic (1 / 1,000)");
+    case uBTC: return QString("Micro-ProsperCoinClassic (1 / 1,000,000)");
     default: return QString("???");
     }
 }

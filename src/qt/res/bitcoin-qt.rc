@@ -20,8 +20,8 @@ BEGIN
     BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
-            VALUE "CompanyName",        "Prospercoin v1"
-            VALUE "FileDescription",    "Prospercoin-Qt (OSS GUI client for ProsperCoin v1)"
+            VALUE "CompanyName",        "Prospercoin Classic"
+            VALUE "FileDescription",    "Prospercoin-Qt (OSS GUI client for ProsperCoin Classic)"
             VALUE "FileVersion",        VER_FILEVERSION_STR
             VALUE "InternalName",       "prospercoin-qt"
             VALUE "LegalCopyright",     COPYRIGHT_STR

@@ -13,8 +13,8 @@
 #include <QAbstractItemDelegate>
 #include <QPainter>
 
-#define DECORATION_SIZE 64
-#define NUM_ITEMS 3
+#define DECORATION_SIZE 38
+#define NUM_ITEMS 4
 
 class TxViewDelegate : public QAbstractItemDelegate
 {
@@ -202,8 +202,13 @@ void OverviewPage::updateDisplayUnit()
 
 void OverviewPage::updateAlerts(const QString &warnings)
 {
-    this->ui->labelAlerts->setVisible(!warnings.isEmpty());
-    this->ui->labelAlerts->setText(warnings);
+	if (warnings.isEmpty()) 
+	{
+		this->ui->labelAlerts->setText("New special ProsperCoin will release this early 2018. Visit www.weuseprc.com for more info.");
+	} else {
+		this->ui->labelAlerts->setVisible(!warnings.isEmpty());
+		this->ui->labelAlerts->setText(warnings);
+	}
 }
 
 void OverviewPage::showOutOfSyncWarning(bool fShow)
