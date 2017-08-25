@@ -1735,23 +1735,23 @@ bool CBlock::ConnectBlock(CValidationState &state, CBlockIndex* pindex, CCoinsVi
     // This rule was originally applied all blocks whose timestamp was after October 1, 2012, 0:00 UTC.
     // Now that the whole chain is irreversibly beyond that time it is applied to all blocks,
     // this prevents exploiting the issue against nodes in their initial block download.
-    bool fEnforceBIP30 = true;
+//    bool fEnforceBIP30 = true;
 
-    if (fEnforceBIP30) {
-        for (unsigned int i=0; i<vtx.size(); i++) {
-            uint256 hash = GetTxHash(i);
-            if (view.HaveCoins(hash) && !view.GetCoins(hash).IsPruned())
-                return state.DoS(100, error("ConnectBlock() : tried to overwrite transaction"));
-        }
-    }
+//    if (fEnforceBIP30) {
+//        for (unsigned int i=0; i<vtx.size(); i++) {
+//            uint256 hash = GetTxHash(i);
+//            if (view.HaveCoins(hash) && !view.GetCoins(hash).IsPruned())
+//                return state.DoS(100, error("ConnectBlock() : tried to overwrite transaction"));
+//        }
+//    }
 
     // BIP16 didn't become active until Oct 1 2012
-    int64 nBIP16SwitchTime = 1349049600;
-    bool fStrictPayToScriptHash = (pindex->nTime >= nBIP16SwitchTime);
+    //int64 nBIP16SwitchTime = 1349049600;
+    // bool fStrictPayToScriptHash = (pindex->nTime >= nBIP16SwitchTime);
 
-    unsigned int flags = SCRIPT_VERIFY_NOCACHE |
-                         (fStrictPayToScriptHash ? SCRIPT_VERIFY_P2SH : SCRIPT_VERIFY_NONE);
-
+    //unsigned int flags = SCRIPT_VERIFY_NOCACHE |
+    //                     (fStrictPayToScriptHash ? SCRIPT_VERIFY_P2SH : SCRIPT_VERIFY_NONE);
+	unsigned int flags = SCRIPT_VERIFY_NOCACHE | SCRIPT_VERIFY_P2SH;
     CBlockUndo blockundo;
 
     CCheckQueueControl<CScriptCheck> control(fScriptChecks && nScriptCheckThreads ? &scriptcheckqueue : NULL);
@@ -1777,15 +1777,15 @@ bool CBlock::ConnectBlock(CValidationState &state, CBlockIndex* pindex, CCoinsVi
             if (!tx.HaveInputs(view))
                 return state.DoS(100, error("ConnectBlock() : inputs missing/spent"));
 
-            if (fStrictPayToScriptHash)
-            {
+            // if (fStrictPayToScriptHash)
+            // {
                 // Add in sigops done by pay-to-script-hash inputs;
                 // this is to prevent a "rogue miner" from creating
                 // an incredibly-expensive-to-validate block.
                 nSigOps += tx.GetP2SHSigOpCount(view);
                 if (nSigOps > MAX_BLOCK_SIGOPS)
                      return state.DoS(100, error("ConnectBlock() : too many sigops"));
-            }
+            // }
 
             nFees += tx.GetValueIn(view)-tx.GetValueOut();
 
