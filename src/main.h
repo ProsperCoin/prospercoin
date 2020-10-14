@@ -1929,7 +1929,9 @@ public:
                  unsigned char _chRejectCode=0, std::string _strRejectReason="") {
         return DoS(0, ret, _chRejectCode, _strRejectReason);
     }
-    bool Error() {
+    bool Error(std::string strRejectReasonIn="") {
+        if (mode == MODE_VALID)
+            strRejectReason = strRejectReasonIn;        
         mode = MODE_ERROR;
         return false;
     }
