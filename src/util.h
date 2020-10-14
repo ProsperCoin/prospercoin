@@ -199,7 +199,7 @@ std::string ATTR_WARN_PRINTF(1,3) real_strprintf(const char *format, int dummy, 
  * This will not support GCC format type warnings (-Wformat) so be careful.
  */
 std::string real_strprintf(const std::string &format, int dummy, ...);
-#define strprintf(format, ...) real_strprintf(format, 0, __VA_ARGS__)
+// #define strprintf(format, ...) real_strprintf(format, 0, __VA_ARGS__)
 std::string vstrprintf(const char *format, va_list ap);
 
 bool ATTR_WARN_PRINTF(1,2) error(const char *format, ...);
