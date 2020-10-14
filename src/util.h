@@ -139,6 +139,7 @@ extern bool fDebug;
 extern bool fDebugNet;
 extern bool fPrintToConsole;
 extern bool fPrintToDebugger;
+extern bool fPrintToDebugLog;
 extern bool fDaemon;
 extern bool fServer;
 extern bool fCommandLine;
