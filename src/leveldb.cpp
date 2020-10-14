@@ -47,16 +47,16 @@ CLevelDB::CLevelDB(const boost::filesystem::path &path, size_t nCacheSize, bool 
         options.env = penv;
     } else {
         if (fWipe) {
-            printf("Wiping LevelDB in %s\n", path.string().c_str());
+            LogPrintf("Wiping LevelDB in %s\n", path.string());
             leveldb::DestroyDB(path.string(), options);
         }
         TryCreateDirectory(path)
-        printf("Opening LevelDB in %s\n", path.string().c_str());
+        LogPrintf("Opening LevelDB in %s\n", path.string());
     }
     leveldb::Status status = leveldb::DB::Open(options, path.string(), &pdb);
     if (!status.ok())
         throw std::runtime_error(strprintf("CLevelDB(): error opening database environment %s", status.ToString().c_str()));
-    printf("Opened LevelDB successfully\n");
+    LogPrintf("Opened LevelDB successfully\n");
 }
 
 CLevelDB::~CLevelDB() {
