@@ -251,11 +251,11 @@ static inline int LogPrint(const char* category, const char* format)
     if(!LogAcceptCategory(category)) return 0;
     return LogPrintStr(format);
 }
-static inline bool error(const char* format)
-{
-    LogPrintStr(std::string("ERROR: ") + format + "\n");
-    return false;
-}
+// static inline bool error(const char* format)
+// {
+//    LogPrintStr(std::string("ERROR: ") + format + "\n");
+//    return false;
+// }
 
 
 
