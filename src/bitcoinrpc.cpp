@@ -448,7 +448,7 @@ int ReadHTTPMessage(std::basic_istream<char>& stream, map<string,
                     int nProto)
 {
     mapHeadersRet.clear();
-    strMessageRet = "";
+    strMessageRet.clear();
 
     // Read header
     int nLen = ReadHTTPHeaders(stream, mapHeadersRet);
@@ -1238,7 +1238,7 @@ int CommandLineRPC(int argc, char *argv[])
         {
             // Result
             if (result.type() == null_type)
-                strPrint = "";
+                strPrint.clear();
             else if (result.type() == str_type)
                 strPrint = result.get_str();
             else

@@ -134,7 +134,7 @@ CAddress GetLocalAddress(const CNetAddr *paddrPeer)
 
 bool RecvLine(SOCKET hSocket, string& strLine)
 {
-    strLine = "";
+    strLine.clear();
     while (true)
     {
         char c;
@@ -1682,7 +1682,7 @@ void ThreadMessageHandler()
 
 bool BindListenPort(const CService &addrBind, string& strError)
 {
-    strError = "";
+    strError.clear();
     int nOne = 1;
 
     // Create socket for listening for incoming connections
