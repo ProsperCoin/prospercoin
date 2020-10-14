@@ -2109,8 +2109,12 @@ bool FindBlockPos(CValidationState &state, CDiskBlockPos &pos, unsigned int nAdd
         pos.nPos = vinfoBlockFile[nFile].nSize;
     }
     nLastBlockFile = nFile;
-    vinfoBlockFile[nFile].nSize += nAddSize;
     vinfoBlockFile[nFile].AddBlock(nHeight, nTime);
+     if (fKnown)
+        vinfoBlockFile[nFile].nSize = std::max(pos.nPos + nAddSize, vinfoBlockFile[nFile].nSize);
+    else
+        vinfoBlockFile[nFile].nSize += nAddSize;
+    
     
     if (!fKnown) {
         unsigned int nOldChunks = (pos.nPos + BLOCKFILE_CHUNK_SIZE - 1) / BLOCKFILE_CHUNK_SIZE;
@@ -2706,7 +2710,7 @@ bool static LoadBlockIndexDB()
             break;
         }
     }
-    
+
     // Load nBestInvalidWork, OK if it doesn't exist
     CBigNum bnBestInvalidWork;
     pblocktree->ReadBestInvalidWork(bnBestInvalidWork);
