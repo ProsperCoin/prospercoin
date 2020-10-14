@@ -265,7 +265,8 @@ bool LogAcceptCategory(const char* category)
 // @todo - move to chainparambase
 bool AreBaseParamsConfigured()
 {
-    return pCurrentBaseParams != NULL;
+    // return pCurrentBaseParams != NULL;
+    return true;
 }
 
 int LogPrintStr(const std::string &str)
