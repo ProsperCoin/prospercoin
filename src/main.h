@@ -1909,6 +1909,7 @@ private:
         MODE_ERROR,   // run-time error
     } mode;
     int nDoS;
+    std::string strRejectReason;
     unsigned char chRejectCode;
     bool corruptionPossible;
 public:
