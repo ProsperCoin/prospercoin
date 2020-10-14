@@ -436,7 +436,6 @@ public:
         nAvailableCreditCached = 0;
         nChangeCached = 0;
         nOrderPos = -1;
-        nEntryNo = 0;
     }
 
     IMPLEMENT_SERIALIZE
@@ -809,6 +808,7 @@ public:
         strOtherAccount.clear();
         strComment.clear();
         nOrderPos = -1;
+        nEntryNo = 0;
     }
 
     IMPLEMENT_SERIALIZE
