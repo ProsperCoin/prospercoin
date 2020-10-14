@@ -1909,19 +1909,25 @@ private:
         MODE_ERROR,   // run-time error
     } mode;
     int nDoS;
+    unsigned char chRejectCode;
     bool corruptionPossible;
 public:
     CValidationState() : mode(MODE_VALID), nDoS(0), chRejectCode(0), corruptionPossible(false) {}
-    bool DoS(int level, bool ret = false, bool corruptionIn = false) {
+    bool DoS(int level, bool ret = false, 
+            unsigned char chRejectCodeIn=0, std::string strRejectReasonIn="",
+            bool corruptionIn = false) {
+        chRejectCode = chRejectCodeIn;
+        strRejectReason = strRejectReasonIn;
+        corruptionPossible = corruptionIn;
         if (mode == MODE_ERROR)
             return ret;
         nDoS += level;
-        mode = MODE_INVALID;
-        corruptionPossible = corruptionIn;
+        mode = MODE_INVALID;        
         return ret;
     }
-    bool Invalid(bool ret = false) {
-        return DoS(0, ret);
+    bool Invalid(bool ret = false,
+                 unsigned char _chRejectCode=0, std::string _strRejectReason="") {
+        return DoS(0, ret, _chRejectCode, _strRejectReason);
     }
     bool Error() {
         mode = MODE_ERROR;
@@ -1950,6 +1956,8 @@ public:
     bool CorruptionPossible() {
         return corruptionPossible;
     }
+    unsigned char GetRejectCode() const { return chRejectCode; }
+    std::string GetRejectReason() const { return strRejectReason; }
 };
 
 
