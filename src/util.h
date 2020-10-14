@@ -150,6 +150,9 @@ extern bool fNoListen;
 extern bool fLogTimestamps;
 extern volatile bool fReopenDebugLog;
 
+// @todo - Move to chainparam
+bool AreBaseParamsConfigured();
+
 void SetupEnvironment();
 
 /** Return true if log accepts specified category */
