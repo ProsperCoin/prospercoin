@@ -149,6 +149,13 @@ extern bool fNoListen;
 extern bool fLogTimestamps;
 extern volatile bool fReopenDebugLog;
 
+/** Return true if log accepts specified category */
+bool LogAcceptCategory(const char* category);
+/** Send a string to the log output */
+int LogPrintStr(const std::string &str);
+
+#define LogPrintf(...) LogPrint(NULL, __VA_ARGS__)
+
 void RandAddSeed();
 void RandAddSeedPerfmon();
 int ATTR_WARN_PRINTF(1,2) OutputDebugStringF(const char* pszFormat, ...);
@@ -235,7 +242,20 @@ void runCommand(std::string strCommand);
 
 
 
-
+/**
+ * Zero-arg versions of logging and error, these are not covered by
+ * TINYFORMAT_FOREACH_ARGNUM
+ */
+static inline int LogPrint(const char* category, const char* format)
+{
+    if(!LogAcceptCategory(category)) return 0;
+    return LogPrintStr(format);
+}
+static inline bool error(const char* format)
+{
+    LogPrintStr(std::string("ERROR: ") + format + "\n");
+    return false;
+}
 
 
 
